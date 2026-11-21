@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryan's Bio</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Map CSS -->
+  <link rel="stylesheet" href="/css/mapstyle.css">
+</head>
+
+<body>
+
+  <!-- Main Navigation -->
+  <nav class="navbar">
+    <div class="logo">🍷 Wine Inventory</div>
+
+    <ul class="nav-links">
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#winery-map">Winery Map</a></li>
+      <li><a href="#wine-collection">Wine Collection</a></li>
+      <li><a href="#add-wine">Add Wine</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- Dashboard -->
+    <section id="dashboard">
+      <h1>Wine Inventory Dashboard</h1>
+      <p>Welcome to your personal wine and winery database.</p>
+    </section>
+
+    <!-- About Me -->
+    <div class="hobbies">
+      <h2>About Me</h2>
+      
+      <p>Hello! My name is Ryan and this is my Wine Web App. I am 30 years old and from Los Angeles, California. </p>
+      <p>My favorite hobbies are:</p>
+
+      <ul>
+        <li>Cooking and eating new types of food</li>
+        <li>Learning about wine, viticulture, and sustainability</li>
+        <li>Being in nature, biking, and hiking</li>
+        <li>Drawing with markers and pencil</li>
+        <li>Going to the gym and bouldering rocks</li>
+      </ul>
+
+      <p>
+        My goals for this website include learning more about web development and databases.
+        I now have my WSET 2 certification, and recently got my <b>GISP certification!</b>
+      </p>
+    </div>
+
+    <!-- Grape Search -->
+    <div class="search-container">
+      <label for="grapeSearch">
+        <strong>Search Visited Wineries by Grape:</strong>
+      </label>
+
+      <input type="text" id="grapeSearch" placeholder="e.g., Vermentino or Sangiovese">
+
+      <button type="button" onclick="countGrapeInVisitedWineries()">Search</button>
+
+      <div id="searchResults" style="margin-top: 12px; font-weight: bold; color: #7b2cbf;"></div>
+    </div>
+
+    <!-- Winery Map -->
+    <section id="winery-map">
+
+      <h2>Wineries & Tasting Rooms I've Been To 🍷</h2>
+
+      <div class="map-container">
+
+        <!-- Add Winery Form -->
+        <div id="add-winery-panel">
+
+          <div id="panel-header">
+            <h4 style="margin: 0;">Add Winery</h4>
+            <button type="button" id="toggle-btn">−</button>
+          </div>
+
+          <div id="form-content">
+
+            <form id="winery-form">
+
+              <div class="form-group full-width">
+                <label for="winery-name">Name</label>
+                <input type="text" id="winery-name" required>
+              </div>
+
+              <div class="form-group">
+                <label for="winery-location">Location</label>
+                <input type="text" id="winery-location">
+              </div>
+
+              <div class="form-group">
+                <label for="winery-ava">AVA</label>
+                <input type="text" id="winery-ava">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="winery-grapes">Grapes</label>
+                <input type="text" id="winery-grapes" placeholder="Riesling, Muscat">
+              </div>
+
+              <div class="form-group">
+                <label for="winery-lat">Latitude</label>
+                <input type="number" step="any" id="winery-lat" required readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="winery-long">Longitude</label>
+                <input type="number" step="any" id="winery-long" required readonly>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="winery-visited">Visited?</label>
+                <select id="winery-visited">
+                  <option value="yes">yes</option>
+                  <option value="no">no</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <button type="submit">Save Winery</button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- Map Element -->
+        <div id="map"></div>
+
+      </div>
+    </section>
+
+    <!-- Wine Collection -->
+    <section id="wine-collection">
+
+      <h2>My Wine Collection 🍷</h2>
+
+      <!-- Inventory Statistics -->
+      <div class="inventory-stats">
+
+        <div class="stat-card">
+          <h3 id="total-bottles">0</h3>
+          <p>Total Bottles</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="total-producers">0</h3>
+          <p>Producers</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="total-varietals">0</h3>
+          <p>Varietals</p>
+        </div>
+
+      </div>
+
+      <!-- Recently Added Wines -->
+      <h3>Recently Added Wines</h3>
+
+      <div id="wine-cards" class="wine-grid">
+        <!-- Wine cards generated by JavaScript -->
+      </div>
+
+      <!-- Full Inventory -->
+      <h3>Full Inventory</h3>
+
+      <input
+        type="text"
+        id="wine-search"
+        placeholder="Search your wine collection..."
+      >
+
+      <table id="wine-table">
+
+        <thead>
+          <tr>
+            <th>Producer</th>
+            <th>Wine Name</th>
+            <th>Vintage</th>
+            <th>Varietal</th>
+            <th>Region</th>
+            <th>Quantity</th>
+            <th>Purchase Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="wine-table-body">
+          <!-- Wine inventory generated by JavaScript -->
+        </tbody>
+
+      </table>
+
+      <!-- EDIT WINE FORM -->
+      <div id="edit-wine-container" style="display: none;">
+
+        <h3>Edit Wine</h3>
+
+        <form id="edit-wine-form">
+
+          <input type="hidden" id="edit-wine-id">
+
+          <div class="form-group">
+            <label for="edit-producer">Producer</label>
+            <input type="text" id="edit-producer" required>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-wine-name">Wine Name</label>
+            <input type="text" id="edit-wine-name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-vintage">Vintage</label>
+            <input type="number" id="edit-vintage" min="1800">
+          </div>
+
+          <div class="form-group">
+            <label for="edit-varietal">Varietal</label>
+            <input type="text" id="edit-varietal">
+          </div>
+
+          <div class="form-group">
+            <label for="edit-region">Region</label>
+            <input type="text" id="edit-region">
+          </div>
+
+          <div class="form-group">
+            <label for="edit-quantity">Quantity (bottles)</label>
+            <input type="number" id="edit-quantity" min="0" step="1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-price">Purchase Price ($)</label>
+            <input type="number" id="edit-price" min="0" step="0.01" required>
+          </div>
+
+          <div class="form-group full-width">
+            <button type="submit">Save Changes</button>
+            <button type="button" id="cancel-edit">Cancel</button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </section>
+
+    <!-- Add Wine -->
+    <section id="add-wine">
+
+      <h2>Add a Wine 🍷</h2>
+
+      <form id="add-wine-form" class="wine-form">
+
+        <div class="form-group">
+          <label for="producer">Producer</label>
+          <input type="text" id="producer" required placeholder="e.g. DaVero">
+        </div>
+
+        <div class="form-group">
+          <label for="wine-name">Wine Name</label>
+          <input type="text" id="wine-name" required placeholder="e.g. Sangiovese">
+        </div>
+
+        <div class="form-group">
+          <label for="vintage">Vintage</label>
+          <input type="number" id="vintage" min="1800" required placeholder="2021">
+        </div>
+
+        <div class="form-group">
+          <label for="varietal">Varietal</label>
+          <input type="text" id="varietal" required placeholder="e.g. Sangiovese">
+        </div>
+
+        <div class="form-group">
+          <label for="region">Region</label>
+          <input type="text" id="region" required placeholder="e.g. Dry Creek Valley">
+        </div>
+
+        <div class="form-group">
+          <label for="quantity">Quantity (bottles)</label>
+          <input type="number" id="quantity" min="1" step="1" required>
+        </div>
+
+        <div class="form-group">
+          <label for="price">Purchase Price ($)</label>
+          <input type="number" id="price" min="0" step="0.01" required>
+        </div>
+
+        <div class="form-group full-width">
+          <button type="submit">Add Wine to Collection</button>
+        </div>
+
+      </form>
+
+      <p id="form-message" role="status"></p>
+
+    </section>
+
+  </main>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Map JavaScript -->
+  <script src="/javascript/map.js"></script>
+
+  <!-- Inventory JavaScript -->
+  <script src="/javascript/wine-inventory.js"></script>
+
+</body>
+</html>
